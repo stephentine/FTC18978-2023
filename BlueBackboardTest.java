@@ -57,8 +57,8 @@ public class BlueBackboardTest extends LinearOpMode {
             driveEnc(48,TICKS_PER_SEC);
             strafeEnc(-72,TICKS_PER_SEC);
             driveEnc(-24,TICKS_PER_SEC);
-            turnEnc(-90,TICKS_PER_SEC);
-            driveEnc(20,TICKS_PER_SEC);
+            turnEnc(90,TICKS_PER_SEC);
+            driveEnc(-20,TICKS_PER_SEC);
         }
     }
 
