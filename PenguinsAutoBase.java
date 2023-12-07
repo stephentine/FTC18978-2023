@@ -27,6 +27,9 @@ public class PenguinsAutoBase extends LinearOpMode {
     static final double TICKS_PER_QUARTER_TURN = 648.0;
     static final double TICKS_PER_DEGREE = TICKS_PER_QUARTER_TURN / 90;
 
+    //Set drive constants for field tiles
+    static final double INCHES_PER_FIELD_TILE = 24.0;
+
     public void runOpMode() {
         //Set up motors
         m1 = (DcMotorEx) hardwareMap.dcMotor.get("front_left");
@@ -60,7 +63,7 @@ public class PenguinsAutoBase extends LinearOpMode {
         }
     }
 
-    //Here are some methods that make this easier
+    //Turn a number of given degrees based on a rough 90-degree turn constant
     public void turnEnc(int degrees, double vel) {
         m1.setTargetPosition((int)(degrees * TICKS_PER_DEGREE));
         m2.setTargetPosition((int)(-degrees * TICKS_PER_DEGREE));
@@ -80,6 +83,7 @@ public class PenguinsAutoBase extends LinearOpMode {
         m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    //Drive a given distance in inches
     public void driveEnc(int inches, double vel) {
         //motor.setTargetPosititon: set the desired encoder value that you want the motor to hit
         m1.setTargetPosition((int)(inches * TICKS_PER_IN));
@@ -100,6 +104,29 @@ public class PenguinsAutoBase extends LinearOpMode {
         m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    //Drive a given number of field tiles
+    public void driveTiles(double tiles, double vel) {
+        //motor.setTargetPosititon: set the desired encoder value that you want the motor to hit
+        m1.setTargetPosition((int)(tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+        m2.setTargetPosition((int)(tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+        m3.setTargetPosition((int)(tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+        m4.setTargetPosition((int)(tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+
+        runAllToPosition();
+        m1.setVelocity(vel);
+        m2.setVelocity(vel);
+        m3.setVelocity(vel);
+        m4.setVelocity(vel);
+
+        while(m1.isBusy() || m2.isBusy() || m3.isBusy() || m4.isBusy());
+        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+
+    //Strafe a given distance in inches
     public void strafeEnc(int inches, double vel) {
         //motor.setTargetPosititon: set the desired encoder value that you want the motor to hit
         m1.setTargetPosition((int)(inches * TICKS_PER_IN));
@@ -120,6 +147,28 @@ public class PenguinsAutoBase extends LinearOpMode {
         m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    //Strafe a given number of field tiles
+    public void strafeTiles(double tiles, double vel) {
+        //motor.setTargetPosititon: set the desired encoder value that you want the motor to hit
+        m1.setTargetPosition((int)(tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+        m2.setTargetPosition((int)(-tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+        m3.setTargetPosition((int)(-tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+        m4.setTargetPosition((int)(tiles * INCHES_PER_FIELD_TILE * TICKS_PER_IN));
+
+        runAllToPosition();
+        m1.setVelocity(vel);
+        m2.setVelocity(vel);
+        m3.setVelocity(vel);
+        m4.setVelocity(vel);
+
+        while(m1.isBusy() || m2.isBusy() || m3.isBusy() || m4.isBusy());
+        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    //Makes other functions more compact
     public void runAllToPosition() {
         //RUN_TO_POSITION: tells the motor to run the the target position
         m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
