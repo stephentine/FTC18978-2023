@@ -1,20 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+//import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+//import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+//import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 @TeleOp
 public class BasicTeleOp extends LinearOpMode {
     //Initialize motors, servos, sensors, imus, etc.
     DcMotorEx m1,m2,m3,m4,intake,slide;
-    DistanceSensor distance;
+    //DistanceSensor distance;
     //Servo servo;
 
     public void runOpMode() {
@@ -53,11 +54,11 @@ public class BasicTeleOp extends LinearOpMode {
         m4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Get the distance sensor and motor from hardwareMap
-        distance = hardwareMap.get(DistanceSensor.class, "distance");
+        //distance = hardwareMap.get(DistanceSensor.class, "distance");
 
         // Set default intake toggle state
         double intakeState = 0.0;
-        boolean bumperLastState = false;
+        int bumperToggleState = 0;
 
         waitForStart();
 
@@ -74,7 +75,7 @@ public class BasicTeleOp extends LinearOpMode {
                 py = gamepad1.dpad_up ? 1.0 : py;
             } else {
                 // If the dpad is not in use, drive via sticks
-                px = -gamepad1.left_stick_x;
+                px = gamepad1.left_stick_x;
                 py = -gamepad1.left_stick_y;
                 pa = -gamepad1.right_stick_x;
             }
@@ -90,6 +91,10 @@ public class BasicTeleOp extends LinearOpMode {
             p2 /= max;
             p3 /= max;
             p4 /= max;
+            m1.setPower(p1);
+            m2.setPower(p2);
+            m3.setPower(p3);
+            m4.setPower(p4);
 
             // Distance sensor cutoff test
             // If the robot is travelling backwards and is too close to a wall, it will stop
@@ -109,19 +114,21 @@ public class BasicTeleOp extends LinearOpMode {
             */
 
             // Intake toggle
-            if (!bumperLastState && gamepad1.right_bumper) {
-                if (intakeState == 0.0) {
-                    intakeState = 1.0;
-                } else {
-                    intakeState = 0.0;
+            if (gamepad1.right_bumper) {
+                if (bumperToggleState == 0) {
+                    bumperToggleState = 1;
+                } else if (bumperToggleState == 1) {
+                    if (intakeState == 0.0) {
+                        intakeState = 1.0;
+                    } else {
+                        intakeState = 0.0;
+                    }
+                    bumperToggleState = 2;
                 }
+            } else {
+                bumperToggleState = 0;
             }
             intake.setPower(-intakeState);
-
-            // Sets the "LastState" for the b button if
-            // b was not pressed last loop but is this
-            // loop, then toggle the intake
-            bumperLastState = gamepad1.right_bumper;
         }
     }
 }
