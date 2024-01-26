@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+// POSITIVE IS COUNTER-CLOCKWISE
+
 @Autonomous
 //public class BasicAutoTest extends LinearOpMode {
 public class PenguinsAutoBase extends LinearOpMode {
